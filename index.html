@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta name="description" content="Single Page App - City Uni" />
+    <meta name="description" content="Single Page App displaying comments - City Uni" />
     <meta name="author" content="Urfan Malik" />
 
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <title>Single Page App - City University</title>
 
@@ -15,22 +15,66 @@
 
 </head>
 
-<body onload="">
+<body>
+    <div class="container-fluid">
+        <h1>Single Page App <small class="text-muted">displaying comments from RESTful API</small></h1>
+        <h2>Below...</h2>
 
-	<h1>Single Page App - City University</h1>
-	<h2>Below...</h2>
-
-    <p>Result:<br /> </p>
-    <div id="id01"></div>
-
+        <p>Result:<br /> </p>
+        <div id="id01"></div>
+    </div>
 </body>
 
-<script type="application/javascript">
+<script>
+
+    function printData(commentsArr)
+    {
+        var out = "";
+        var i;
+
+        out += '<table class="table table-hover">';
+        out += '<thead class="thead-light">';
+        out += "<tr>";
+        out += '<th style="width: 10px">Post id</th>' +
+            '<th>ID</th>' +
+            '<th>Name</th>' +
+            '<th>Email</th>' +
+            '<th>Body</th>';
+        out += '</tr>';
+        out += '</thead>';
+        for(i = 0; i < commentsArr.length; i++)
+        {
+            out += "<tr>";
+            out += '<td>' + commentsArr[i].postId + '</td>' +
+                '<td>' + commentsArr[i].id + '</td>' +
+                '<td>' + commentsArr[i].name + '</td>' +
+                '<td>' + commentsArr[i].email + '</td>' +
+                '<td>' + commentsArr[i].body + '</td>';
+            out += "</tr>";
+        }
+        out += "</table>";
+        document.getElementById("id01").innerHTML = out;
+    }
+
 
     //$("p").hide();
+    $(document).ready(function()
+    {
+        var urlStr = "https://jsonplaceholder.typicode.com/comments";
+        //alert('test');
+        $.get(urlStr, function(data, status){
+            //alert("Data: " + data + "\nStatus: " + status);
+            printData(data);
+        });
+    });
 
+
+
+
+
+/*
     var xmlhttp = new XMLHttpRequest();
-    var url = "https://jsonplaceholder.typicode.com/comments";
+
 
     xmlhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
@@ -40,20 +84,9 @@
     };
     xmlhttp.open("GET", url, true);
     xmlhttp.send();
+*/
 
-    function myFunction(arr) {
-        var out = "";
-        var i;
-        for(i = 0; i < arr.length; i++)
-        {
-            out += '' + arr[i].postId + ' ' +
-                arr[i].id + ' ' +
-                arr[i].name + ' ' +
-                arr[i].email + ' ' +
-                arr[i].body + '<br>';
-        }
-        document.getElementById("id01").innerHTML = out;
-    }
+
 
 </script>
 
