@@ -16,17 +16,111 @@
 </head>
 
 <body>
-    <div class="container-fluid">
-        <h1>Single Page App <small class="text-muted">displaying comments from RESTful API</small></h1>
-        <!--<h2>Below...</h2>
 
+    <div class="container-fluid">
+
+        <h1 class="text-center">Single Page App <small class="text-muted">displaying comments from RESTful API</small></h1>
+
+        <!--<h2>Below...</h2>
         <p>Result:<br /> </p>-->
-        <div id="id01"></div>
-    </div>
-</body>
+
+        <div id="pagination"></div>
+
+        <div id="jsonData"></div>
+
+
+    </div><!-- end of container div -->
 
 <script>
 
+    var urlBaseStr = "https://jsonplaceholder.typicode.com/comments";
+    var urlParamLimit = 10;
+    var urlParamPage = 1;
+    var totalComments=0;
+    var currentPageNum = 0;
+    var perPageInt = 7;
+    var startInt = 0;
+    var endInt = 0;
+
+
+    // Get the query-string parameters
+    // Taken from SitePoint.com and check for results to avoid exception
+    $.urlParam = function(name)
+    {
+        var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+        if (results)
+        {
+            return results[1];
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+
+    // Build array of page numbers for pagination
+    function getPagination(currentPage)
+    {
+        var paginationArray = new Array();
+
+        if(currentPage != 1)
+        {
+            aPaginationObject = {label: "Previous", index: currentPage - 1};
+            paginationArray.push(aPaginationObject);
+        }
+
+        pagesInt = Math.ceil(totalComments / perPageInt);
+
+        for(i = 0; i < pagesInt; i++)
+        {
+            aPaginationObject = {label: i+1, index: i+1};
+
+            paginationArray.push(aPaginationObject);
+        }
+
+        if(currentPage != pagesInt)
+        {
+            var indexValue = +currentPage + 1;
+            aPaginationObject = {label: 'Next', index: indexValue};
+            paginationArray.push(aPaginationObject);
+        }
+        return paginationArray;
+    }
+
+    // Print out values from pagination array
+    function printPagination(currentPage)
+    {
+        var paginationArr = getPagination(currentPage);
+        var paginationArrCount = paginationArr.length;
+
+        var out='<nav aria-label="Page navigation">';
+
+        if (paginationArrCount > 0 )
+        {
+            out += '<ul class="pagination justify-content-end">';
+            var aPaginationObject;
+            //var j=1;
+
+            for(i = 0; i < paginationArrCount; i++)
+            {
+                aPaginationObject = paginationArr[i];
+
+                out += '<li class="page-item">';
+                out += '<a class="page-link" href="' +
+                        "?_limit="+urlParamLimit+"&_page="+ aPaginationObject.index + '">';
+                out += aPaginationObject.label + ' ';
+
+                out += '</a>';
+                out +=  '</li>';
+            }
+            out += "</ul></nav>";
+
+            document.getElementById("pagination").innerHTML = out;
+        }
+    }
+
+    // Print data (json) to page
     function printData(commentsArr)
     {
         var out = "";
@@ -35,7 +129,7 @@
         out += '<table class="table table-hover">';
         out += '<thead class="thead-light">';
         out += "<tr>";
-        out += '<th style="width: 10px">Post id</th>' +
+        out += '<th >Post id</th>' +
             '<th>ID</th>' +
             '<th>Name</th>' +
             '<th>Email</th>' +
@@ -53,41 +147,44 @@
             out += "</tr>";
         }
         out += "</table>";
-        document.getElementById("id01").innerHTML = out;
+
+        document.getElementById("jsonData").innerHTML = out;
     }
 
-
-    //$("p").hide();
+    // Make API call as soon as the HTML is ready
     $(document).ready(function()
     {
-        var urlStr = "https://jsonplaceholder.typicode.com/comments";
-        //alert('test');
-        $.get(urlStr, function(data, status){
-            //alert("Data: " + data + "\nStatus: " + status);
+        urlParamLimit = $.urlParam('_limit');
+        urlParamPage = $.urlParam('_page');
+
+        if (urlParamLimit == null)
+        {
+            urlParamLimit = 50;
+        }
+        if (urlParamPage == null)
+        {
+            urlParamPage = 1;
+        }
+
+        var urlComplete = urlBaseStr + "?_limit="+urlParamLimit+"&_page="+urlParamPage;
+//alert(urlComplete);
+        $.get(urlComplete, function(data, status){
+
+            totalComments = 500;//data.length;
+            currentPageNum = urlParamPage;
+            perPageInt = urlParamLimit;
+
+            startInt = (currentPageNum - 1) * perPageInt;
+            endInt = startInt + perPageInt - 1;
+
+            printPagination(currentPageNum);
+
             printData(data);
         });
     });
 
-
-
-
-
-/*
-    var xmlhttp = new XMLHttpRequest();
-
-
-    xmlhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            var myArr = JSON.parse(this.responseText);
-            myFunction(myArr);
-        }
-    };
-    xmlhttp.open("GET", url, true);
-    xmlhttp.send();
-*/
-
-
-
 </script>
+
+</body>
 
 </html>
