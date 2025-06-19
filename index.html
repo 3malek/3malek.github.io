@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta name="description" content="Single Page App displaying comments - City Uni" />
-    <meta name="author" content="Urfan Malik" />
+    <meta name="description" content="App displaying current exchange rates" />
+    <meta name="author" content="Malik" />
 
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <title>Single Page App - City University</title>
+    <title>Single Page App - Currency exchange rates</title>
 
     <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" />
 
@@ -17,24 +17,22 @@
 
 <body>
 
-    <div class="container-fluid">
+<div class="container-fluid">
 
-        <h1 class="text-center">Single Page App <small class="text-muted">displaying comments from RESTful API</small></h1>
+    <h1 class="text-center">Currency Exchange Rates<small class="text-muted"> for GBP via API call</small></h1>
 
-        <!--<h2>Below...</h2>
-        <p>Result:<br /> </p>-->
+    <div id="pagination"></div>
 
-        <div id="pagination"></div>
+    <div id="jsonData"></div>
 
-        <div id="jsonData"></div>
-
-
-    </div><!-- end of container div -->
+</div><!-- end of container div -->
 
 <script>
 
-    var urlBaseStr = "https://jsonplaceholder.typicode.com/comments";
-    var urlParamLimit = 10;
+    //var urlBaseStr = "https://arabicodyssey.com/external/currencyrates/rates.json";
+    //var urlBaseStr = "http://localhost/ao/my-arabic-odyssey/external/currencyrates/api-server.php/queue";
+    var urlBaseStr = "https://arabicodyssey.com/external/currencyrates/api-server.php/queue";
+    var urlParamLimit = 50;
     var urlParamPage = 1;
     var totalComments=0;
     var currentPageNum = 0;
@@ -121,30 +119,38 @@
     }
 
     // Print data (json) to page
-    function printData(commentsArr)
+    function printData(data)
     {
+            //const myObj = data.rates;
+            //const myObj = data['rates'];
+            const myObj = JSON.parse(data);
+            //const myObj = data;
+
+            let text = "";
+            let valueCurrValue = "";
+
         var out = "";
         var i;
 
         out += '<table class="table table-hover">';
         out += '<thead class="thead-light">';
         out += "<tr>";
-        out += '<th >Post id</th>' +
+        out += //'<th >Post id</th>' +
             '<th>ID</th>' +
-            '<th>Name</th>' +
-            '<th>Email</th>' +
-            '<th>Body</th>';
+            '<th>Currency</th>' +
+            '<th>Value</th>';
         out += '</tr>';
         out += '</thead>';
-        for(i = 0; i < commentsArr.length; i++)
+
+        var counter = (urlParamPage-1) * urlParamLimit;
+        for (const keyCurr in myObj)
         {
+            counter++;
             out += "<tr>";
-            out += '<td>' + commentsArr[i].postId + '</td>' +
-                '<td>' + commentsArr[i].id + '</td>' +
-                '<td>' + commentsArr[i].name + '</td>' +
-                '<td>' + commentsArr[i].email + '</td>' +
-                '<td>' + commentsArr[i].body + '</td>';
-            out += "</tr>";
+            out += '<td>' + counter  + '</td>';
+            out += '<td>' + keyCurr + '</td>' +
+            '<td>' + myObj[keyCurr] + '</td>';
+            out += "</tr>";            
         }
         out += "</table>";
 
@@ -167,20 +173,27 @@
         }
 
         var urlComplete = urlBaseStr + "?_limit="+urlParamLimit+"&_page="+urlParamPage;
-//alert(urlComplete);
-        $.get(urlComplete, function(data, status){
 
-            totalComments = 500;//data.length;
-            currentPageNum = urlParamPage;
-            perPageInt = urlParamLimit;
+        const requestOptions = {
+        method: "GET",
+        redirect: "follow"
+        };
+        fetch(urlComplete, requestOptions)
+            .then((response) => response.text())
+            .then((result) => {
+                //console.log(result);
 
-            startInt = (currentPageNum - 1) * perPageInt;
-            endInt = startInt + perPageInt - 1;
+                totalComments = 169;//data.length;
+                currentPageNum = urlParamPage;
+                perPageInt = urlParamLimit;
 
-            printPagination(currentPageNum);
+                startInt = (currentPageNum - 1) * perPageInt;
+                endInt = startInt + perPageInt - 1;
 
-            printData(data);
-        });
+                printPagination(currentPageNum);
+                printData(result);
+            })
+            .catch((error) => console.error(error));
     });
 
 </script>
