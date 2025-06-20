@@ -29,8 +29,6 @@
 
 <script>
 
-    //var urlBaseStr = "https://arabicodyssey.com/external/currencyrates/rates.json";
-    //var urlBaseStr = "http://localhost/ao/my-arabic-odyssey/external/currencyrates/api-server.php/queue";
     var urlBaseStr = "https://arabicodyssey.com/external/currencyrates/api-server.php/queue";
     var urlParamLimit = 50;
     var urlParamPage = 1;
@@ -121,13 +119,10 @@
     // Print data (json) to page
     function printData(data)
     {
-            //const myObj = data.rates;
-            //const myObj = data['rates'];
-            const myObj = JSON.parse(data);
-            //const myObj = data;
+		const myObj = JSON.parse(data);
 
-            let text = "";
-            let valueCurrValue = "";
+		let text = "";
+		let valueCurrValue = "";
 
         var out = "";
         var i;
