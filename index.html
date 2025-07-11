@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta name="description" content="App displaying current exchange rates" />
-    <meta name="author" content="Malik" />
+    <meta name="author" content="M" />
 
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -19,17 +19,44 @@
 
 <div class="container-fluid">
 
-    <h1 class="text-center">Currency Exchange Rates<small class="text-muted"> for GBP (updated daily)</small></h1>
+    <h1 class="text-center">
+        Currency Exchange Rates
+        <small class="text-muted"> for GBP
+            <!--<select id="form-select-currency" class="form-select" aria-label="Default select example">
+            <option value="GBP" selected>GBP</option>
+            <option value="USD">USD</option>
+            <option value="EUR">EUR</option>
+            </select>-->
+            (updated daily)            
+        </small>        
+    </h1>
 
-    <div id="pagination"></div>
+    <nav aria-label="Page navigation"><!--</nav>-->
+        <ul id="pagination" class="pagination justify-content-end">
+            <li class="page-item"><a class="page-link" href="">pagination</a></li>
+            <!--<div id="pagination"></div>-->
+        </ul>
+    </nav>        
 
-    <div id="jsonData"></div>
+    <table class="table table-hover">
+    <thead class="thead-light">
+    <tr>
+    <th>ID</th>
+    <th>Currency</th>
+    <th>Value</th>
+    </tr>
+    </thead>
+    <!--<div id="jsonData"></div>-->
+    <tbody id="tableData"><tr><td>000</td><td>GBP</td><td>1.0000000000</td></tr></tbody>
+    </table>
+
 
 </div><!-- end of container div -->
 
 <script>
 
-    var urlBaseStr = "https://arabicodyssey.com/external/currencyrates/api-server.php/queue";
+    //var urlBaseStr = "http://localhost:8080/queue";
+    var urlBaseStr = "https://fx-dash-rest-api-pid.nw.r.appspot.com/queue";
     var urlParamLimit = 50;
     var urlParamPage = 1;
     var totalComments=0;
@@ -37,7 +64,7 @@
     var perPageInt = 7;
     var startInt = 0;
     var endInt = 0;
-
+    var valueOfSelectElement = "GBP";
 
     // Get the query-string parameters
     // Taken from SitePoint.com and check for results to avoid exception
@@ -65,6 +92,11 @@
             aPaginationObject = {label: "Previous", index: currentPage - 1};
             paginationArray.push(aPaginationObject);
         }
+        /*else
+        {
+            aPaginationObject = {label: "Previous", index: currentPage };
+            paginationArray.push(aPaginationObject);            
+        }*/
 
         pagesInt = Math.ceil(totalComments / perPageInt);
 
@@ -81,6 +113,12 @@
             aPaginationObject = {label: 'Next', index: indexValue};
             paginationArray.push(aPaginationObject);
         }
+        /*else
+        {
+            var indexValue = +currentPage;
+            aPaginationObject = {label: 'Next', index: indexValue};
+            paginationArray.push(aPaginationObject);            
+        }*/
         return paginationArray;
     }
 
@@ -90,11 +128,12 @@
         var paginationArr = getPagination(currentPage);
         var paginationArrCount = paginationArr.length;
 
-        var out='<nav aria-label="Page navigation">';
+        //var out='<nav aria-label="Page navigation">';
+        var out='';            
 
         if (paginationArrCount > 0 )
         {
-            out += '<ul class="pagination justify-content-end">';
+            //out += '<ul class="pagination justify-content-end">';
             var aPaginationObject;
             //var j=1;
 
@@ -110,7 +149,7 @@
                 out += '</a>';
                 out +=  '</li>';
             }
-            out += "</ul></nav>";
+            //out += "</ul></nav>";
 
             document.getElementById("pagination").innerHTML = out;
         }
@@ -119,14 +158,17 @@
     // Print data (json) to page
     function printData(data)
     {
-		const myObj = JSON.parse(data);
-
+        var jsonData = JSON.parse(data);
+		//const myObj = jsonData.rates;
+        const myObj = jsonData;
+        
 		let text = "";
 		let valueCurrValue = "";
 
         var out = "";
         var i;
 
+        /*
         out += '<table class="table table-hover">';
         out += '<thead class="thead-light">';
         out += "<tr>";
@@ -136,25 +178,30 @@
             '<th>Value</th>';
         out += '</tr>';
         out += '</thead>';
+        */
 
         var counter = (urlParamPage-1) * urlParamLimit;
+
         for (const keyCurr in myObj)
-        {
+        {            
             counter++;
             out += "<tr>";
-            out += '<td>' + counter  + '</td>';
+            out += '<td>' + ( counter<10 ? "0"+counter : counter ) + '</td>';
+            //out += '<td>' + ( counter ) + '</td>';
             out += '<td>' + keyCurr + '</td>' +
             '<td>' + myObj[keyCurr] + '</td>';
-            out += "</tr>";            
+            out += "</tr>";       
         }
-        out += "</table>";
+        //out += "</table>";
 
-        document.getElementById("jsonData").innerHTML = out;
+        document.getElementById("tableData").innerHTML = out;
     }
 
     // Make API call as soon as the HTML is ready
     $(document).ready(function()
     {
+        //alert("test");
+
         urlParamLimit = $.urlParam('_limit');
         urlParamPage = $.urlParam('_page');
 
@@ -167,7 +214,7 @@
             urlParamPage = 1;
         }
 
-        var urlComplete = urlBaseStr + "?_limit="+urlParamLimit+"&_page="+urlParamPage;
+        var urlComplete = urlBaseStr + "?_limit="+urlParamLimit+"&_page="+urlParamPage+"&_currency"+valueOfSelectElement;
 
         const requestOptions = {
         method: "GET",
@@ -176,7 +223,7 @@
         fetch(urlComplete, requestOptions)
             .then((response) => response.text())
             .then((result) => {
-                //console.log(result);
+                console.log(result);
 
                 totalComments = 169;//data.length;
                 currentPageNum = urlParamPage;
@@ -189,7 +236,25 @@
                 printData(result);
             })
             .catch((error) => console.error(error));
+
+        //$("#form-select-currency").on("click", { url: urlComplete }, getJson);
+        $("#form-select-currency").on("change", { arg: document.getElementById("form-select-currency").value }, setBaseCurrency);
+
     });
+
+    function setBaseCurrency(evt)
+    {
+        console.log("evt: " + evt.data.arg);
+
+        var selectedItem = $('#form-select-currency').val();
+
+        console.log("selectedItem: " + selectedItem);
+
+        valueOfSelectElement = selectedItem;
+        //var selectElement = document.getElementById("form-select-currency");
+        //var valueOfSelectElement = selectElement.value;        
+        //var text = e.options[e.selectedIndex].text;
+    }
 
 </script>
 
