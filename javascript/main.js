@@ -129,8 +129,7 @@ function printData(data)
     {            
         counter++;
         out += "<tr>";
-        out += '<td>' + ( counter<10 ? "0"+counter : counter ) + '</td>';
-        //out += '<td>' + ( counter ) + '</td>';
+        //out += '<td>' + ( counter<10 ? "0"+counter : counter ) + '</td>';
         out += '<td>' + keyCurr + '</td>' +
         '<td>' + myObj[keyCurr][0] + '</td>' +
         '<td>' + myObj[keyCurr][1] + '</td>';
