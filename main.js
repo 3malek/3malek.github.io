@@ -10,7 +10,6 @@ var endInt = 0;
 var valueOfSelectElement = "GBP";
 
 // Get the query-string parameters
-// Taken from SitePoint.com and check for results to avoid exception
 $.urlParam = function(name)
 {
     var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
@@ -22,7 +21,7 @@ $.urlParam = function(name)
     {
         return null;
     }
-}
+}// and check for results to avoid exception (SitePoint.com)
 
 
 // Build array of page numbers for pagination
@@ -35,11 +34,6 @@ function getPagination(currentPage)
         aPaginationObject = {label: "Previous", index: currentPage - 1};
         paginationArray.push(aPaginationObject);
     }
-    /*else
-    {
-        aPaginationObject = {label: "Previous", index: currentPage };
-        paginationArray.push(aPaginationObject);            
-    }*/
 
     pagesInt = Math.ceil(totalComments / perPageInt);
 
@@ -56,12 +50,6 @@ function getPagination(currentPage)
         aPaginationObject = {label: 'Next', index: indexValue};
         paginationArray.push(aPaginationObject);
     }
-    /*else
-    {
-        var indexValue = +currentPage;
-        aPaginationObject = {label: 'Next', index: indexValue};
-        paginationArray.push(aPaginationObject);            
-    }*/
     return paginationArray;
 }
 
@@ -71,14 +59,11 @@ function printPagination(currentPage)
     var paginationArr = getPagination(currentPage);
     var paginationArrCount = paginationArr.length;
 
-    //var out='<nav aria-label="Page navigation">';
     var out='';            
 
     if (paginationArrCount > 0 )
     {
-        //out += '<ul class="pagination justify-content-end">';
         var aPaginationObject;
-        //var j=1;
 
         for(i = 0; i < paginationArrCount; i++)
         {
@@ -92,8 +77,6 @@ function printPagination(currentPage)
             out += '</a>';
             out +=  '</li>';
         }
-        //out += "</ul></nav>";
-
         document.getElementById("pagination").innerHTML = out;
     }
 }
@@ -102,49 +85,47 @@ function printPagination(currentPage)
 function printData(data)
 {
     var jsonData = JSON.parse(data);
-    //const myObj = jsonData.rates;
-    const myObj = jsonData;
-    
-    let text = "";
-    let valueCurrValue = "";
 
+    const timestampRates = jsonData.timestamp;
+
+    // Source - https://stackoverflow.com/a/24170950
+    // Posted by Denys Séguret
+    // Retrieved 2026-03-12, License - CC BY-SA 3.0
+    var asOfDate = new Date(timestampRates * 1000);
+
+    document.getElementById("subTitle").innerHTML = 'for GBP (as of ' +  asOfDate.toISOString().substring(0, 10) + ')';
+
+    const myObj = jsonData.rates;
     var out = "";
-    var i;
-
-    /*
-    out += '<table class="table table-hover">';
-    out += '<thead class="thead-light">';
-    out += "<tr>";
-    out += //'<th >Post id</th>' +
-        '<th>ID</th>' +
-        '<th>Currency</th>' +
-        '<th>Value</th>';
-    out += '</tr>';
-    out += '</thead>';
-    */
-
     var counter = (urlParamPage-1) * urlParamLimit;
 
     for (const keyCurr in myObj)
-    {            
+    {
+        var changeSymbol = "<span style='color:darkblue'>&#9632</span>";
+        if (myObj[keyCurr][2] == 'u')
+        {
+            changeSymbol = "<span style='color:green'>&#9650;</span>";
+        }
+        else if (myObj[keyCurr][2] == 'd')
+        {
+            changeSymbol = "<span style='color:darkred'>&#9660</span>";
+        }
         counter++;
         out += "<tr>";
-        //out += '<td>' + ( counter<10 ? "0"+counter : counter ) + '</td>';
-        out += '<td>' + keyCurr + '</td>' +
+        out +=
+        '<td>' + changeSymbol + '</td>' +
+        '<td>' + keyCurr + '</td>' +
         '<td>' + myObj[keyCurr][0] + '</td>' +
-        '<td>' + myObj[keyCurr][1] + '</td>';
-        out += "</tr>";       
+        '<td>' + myObj[keyCurr][1] + '</td>' +
+        '';
+        out += "</tr>";
     }
-    //out += "</table>";
-
     document.getElementById("tableData").innerHTML = out;
 }
 
 // Make API call as soon as the HTML is ready
 $(document).ready(function()
 {
-    //alert("test");
-
     urlParamLimit = $.urlParam('_limit');
     urlParamPage = $.urlParam('_page');
 
@@ -181,22 +162,4 @@ $(document).ready(function()
             printData(result);
         })
         .catch((error) => console.error(error));
-
-    //$("#form-select-currency").on("click", { url: urlComplete }, getJson);
-    $("#form-select-currency").on("change", { arg: document.getElementById("form-select-currency").value }, setBaseCurrency);
-
 });
-
-function setBaseCurrency(evt)
-{
-    console.log("evt: " + evt.data.arg);
-
-    var selectedItem = $('#form-select-currency').val();
-
-    console.log("selectedItem: " + selectedItem);
-
-    valueOfSelectElement = selectedItem;
-    //var selectElement = document.getElementById("form-select-currency");
-    //var valueOfSelectElement = selectElement.value;        
-    //var text = e.options[e.selectedIndex].text;
-}

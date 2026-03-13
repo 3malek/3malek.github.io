@@ -11,17 +11,6 @@
 
     <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" />
 
-    <style>
-        /*body {
-            background-color: linen;
-        }
-
-        h1 {
-            color: maroon;
-            margin-left: 40px;
-        }*/
-    </style>
-
     <link rel="icon" type="image/png" href="iconbitcoinbold.png">
 </head>
 
@@ -31,12 +20,7 @@
 
     <h1 class="text-center">
         Currency Exchange Rates
-        <small class="text-muted"> for GBP
-            <!--<select id="form-select-currency" class="form-select" aria-label="Default select example">
-            <option value="GBP" selected>GBP</option>
-            <option value="USD">USD</option>
-            <option value="EUR">EUR</option>
-            </select>-->
+        <small class="text-muted" id="subTitle"> for GBP
             (updated daily)            
         </small>        
     </h1>
@@ -44,20 +28,18 @@
     <nav aria-label="Page navigation"><!--</nav>-->
         <ul id="pagination" class="pagination justify-content-end">
             <li class="page-item"><a class="page-link" href="">pagination</a></li>
-            <!--<div id="pagination"></div>-->
         </ul>
     </nav>        
 
     <table class="table table-hover">
     <thead class="thead-light">
     <tr>
-    <!--<th>ID</th>-->
+    <th></th>
     <th>Code</th>
     <th>Value</th>
     <th>Reciprocal</th>
     </tr>
     </thead>
-    <!--<div id="jsonData"></div>-->
     <tbody id="tableData"><tr><td>0</td><td>Loading</td><td>...</td></tr></tbody>
     </table>
 
@@ -65,7 +47,7 @@
 </div><!-- end of container div -->
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script src="javascript/main.js"></script>
+<script src="main.js"></script>
 <noscript>To use this site, please enable JavaScript.</noscript>
 
 </body>
