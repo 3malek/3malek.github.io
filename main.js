@@ -93,7 +93,8 @@ function printData(data)
     // Retrieved 2026-03-12, License - CC BY-SA 3.0
     var asOfDate = new Date(timestampRates * 1000);
 
-    document.getElementById("subTitle").innerHTML = 'for GBP (as of ' +  asOfDate.toISOString().substring(0, 10) + ')';
+    //document.getElementById("subTitle").innerHTML = 'for GBP (as of ' +  asOfDate.toISOString().substring(0, 10) + ')';
+    document.getElementById("subTitle").innerHTML = 'rates (as of ' +  asOfDate.toISOString().substring(0, 10) + ')';
 
     const myObj = jsonData.rates;
     var out = "";
