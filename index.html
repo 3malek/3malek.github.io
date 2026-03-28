@@ -12,6 +12,8 @@
     <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" />
 
     <link rel="icon" type="image/png" href="iconbitcoinbold.png">
+
+    <link href="graph.css" rel="stylesheet" />
 </head>
 
 <body>
@@ -19,9 +21,9 @@
 <div class="container-fluid">
 
     <h1 class="text-center">
-        <!--Currency Exchange--> GBP
-        <small class="text-muted" id="subTitle"> rates
-            (updated daily)            
+        <!--Currency Exchange--> Sterling
+        <small class="text-muted" id="subTitle">
+            (updated daily)
         </small>        
     </h1>
 
@@ -36,19 +38,59 @@
     <tr>
     <th></th>
     <th>Code</th>
-    <th>Value</th>
-    <th>Reciprocal</th>
+    <th>Per GBP</th>
+    <th>Value in £</th>
     </tr>
     </thead>
     <tbody id="tableData"><tr><td>0</td><td>Loading</td><td>...</td></tr></tbody>
     </table>
 
+    <div
+            class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom"
+    >
+    </div>
+
+    <input type="hidden" id="graphDataOne" value="">
+
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+        <h1 class="h4"><a style="color:darkred">BTC</a> & <a style="color:gold"><strong>XAU</strong></a></h1>
+        <canvas
+                class="my-4 w-100"
+                id="myChart"
+                width="900"
+                height="380"
+        ></canvas>
+        <h1 class="h4"><a style="color:#E5E4E2"><strong>XPT</strong></a> & <a style="color:silver">XAG</a></h1>
+        <canvas
+                class="my-4 w-100"
+                id="myChart2"
+                width="900"
+                height="380"
+        ></canvas>
+        <h1 class="h4"><a style="color:darkgreen">CHF,</a> <a style="color:purple">EUR,</a> <a style="color:darkblue">USD</a></h1>
+        <canvas
+                class="my-4 w-100"
+                id="myChart3"
+                width="900"
+                height="380"
+        ></canvas>
+
+    </main>
 
 </div><!-- end of container div -->
 
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="main.js"></script>
+<script
+        src="https://cdn.jsdelivr.net/npm/chart.js@4.3.2/dist/chart.umd.js"
+        integrity="sha384-eI7PSr3L1XLISH8JdDII5YN/njoSsxfbrkCTnJrzXt+ENP5MOVBxD+l6sEG4zoLp"
+        crossorigin="anonymous"
+        class="astro-vvvwv3sm"
+></script>
+<script src="graph.js" class="astro-vvvwv3sm"></script>
 <noscript>To use this site, please enable JavaScript.</noscript>
+
 
 </body>
 

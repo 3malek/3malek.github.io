@@ -9,6 +9,8 @@ var startInt = 0;
 var endInt = 0;
 var valueOfSelectElement = "GBP";
 
+var hopeThisWorks;
+
 // Get the query-string parameters
 $.urlParam = function(name)
 {
@@ -84,7 +86,13 @@ function printPagination(currentPage)
 // Print data (json) to page
 function printData(data)
 {
+    //console.log( "data..." );
+    //console.log( data );
+
     var jsonData = JSON.parse(data);
+
+    //console.log( "jsonData..." );
+    //console.log( jsonData );
 
     const timestampRates = jsonData.timestamp;
 
@@ -96,18 +104,22 @@ function printData(data)
     //document.getElementById("subTitle").innerHTML = 'for GBP (as of ' +  asOfDate.toISOString().substring(0, 10) + ')';
     document.getElementById("subTitle").innerHTML = 'rates (as of ' +  asOfDate.toISOString().substring(0, 10) + ')';
 
-    const myObj = jsonData.rates;
+    const ratesObj = jsonData.rates;
+
+    console.log( "ratesObj..." );
+    console.log( ratesObj );
+
     var out = "";
     var counter = (urlParamPage-1) * urlParamLimit;
 
-    for (const keyCurr in myObj)
+    for (const keyCurrrency in ratesObj)
     {
         var changeSymbol = "<span style='color:darkblue'>&#9632</span>";
-        if (myObj[keyCurr][2] == 'u')
+        if (ratesObj[keyCurrrency][2] == 'u')
         {
             changeSymbol = "<span style='color:green'>&#9650;</span>";
         }
-        else if (myObj[keyCurr][2] == 'd')
+        else if (ratesObj[keyCurrrency][2] == 'd')
         {
             changeSymbol = "<span style='color:darkred'>&#9660</span>";
         }
@@ -115,13 +127,15 @@ function printData(data)
         out += "<tr>";
         out +=
         '<td>' + changeSymbol + '</td>' +
-        '<td>' + keyCurr + '</td>' +
-        '<td>' + myObj[keyCurr][0] + '</td>' +
-        '<td>' + myObj[keyCurr][1] + '</td>' +
+        '<td>' + keyCurrrency + '</td>' +
+        '<td>' + ratesObj[keyCurrrency][0] + '</td>' +
+        '<td>' + ratesObj[keyCurrrency][1] + '</td>' +
         '';
         out += "</tr>";
     }
     document.getElementById("tableData").innerHTML = out;
+
+    setGraphVariables(jsonData);
 }
 
 // Make API call as soon as the HTML is ready
@@ -147,8 +161,9 @@ $(document).ready(function()
     };
     fetch(urlComplete, requestOptions)
         .then((response) => response.text())
-        .then((result) => {
-            console.log(result);
+        .then((result) =>
+        {
+            //console.log("result: " + result);
 
             //totalComments = 169;//data.length;
             totalComments = 179;//data.length;
@@ -164,3 +179,44 @@ $(document).ready(function()
         })
         .catch((error) => console.error(error));
 });
+
+function setGraphVariables(javascriptObject)
+{
+    const graphDataBtc = deriveChartValues(javascriptObject, "BTC", 1);
+    const graphDataXau = deriveChartValues(javascriptObject, "XAU", 1);
+    const graphDataXag = deriveChartValues(javascriptObject, "XAG", 1);
+    const graphDataXpt = deriveChartValues(javascriptObject, "XPT", 1);
+    const graphDataUsd = deriveChartValues(javascriptObject, "USD", 1);
+    const graphDataEur = deriveChartValues(javascriptObject, "EUR", 1);
+    const graphDataChf = deriveChartValues(javascriptObject, "CHF", 1);
+
+    chartValues(graphDataBtc, graphDataXau, graphDataXag, graphDataXpt, graphDataUsd, graphDataEur, graphDataChf);
+}
+
+function deriveChartValues(javascriptObject, currencyCode, rateOrValue)
+{
+    const ratesTodayObj = javascriptObject.rates;
+    const ratesYesterdayObj = javascriptObject.yesterday;
+    const ratesDaysBeforeObj2 = javascriptObject.daysBefore2;
+    const ratesDaysBeforeObj3 = javascriptObject.daysBefore3;
+    const ratesDaysBeforeObj4 = javascriptObject.daysBefore4;
+
+    const rateTodayArray = ratesTodayObj[currencyCode];
+    const valueToday = rateTodayArray[rateOrValue];
+
+    const rateYesterdayArray = ratesYesterdayObj[currencyCode];
+    const valueYesterday = rateYesterdayArray[rateOrValue];
+
+    const rateDaysBefore2Array = ratesDaysBeforeObj2[currencyCode];
+    const valueDaysBefore2 = rateDaysBefore2Array[rateOrValue];
+
+    const rateDaysBefore3Array = ratesDaysBeforeObj3[currencyCode];
+    const valueDaysBefore3 = rateDaysBefore3Array[rateOrValue];
+
+    const rateDaysBefore4Array = ratesDaysBeforeObj4[currencyCode];
+    const valueDaysBefore4 = rateDaysBefore4Array[rateOrValue];
+
+    const graphData = [valueDaysBefore4, valueDaysBefore3, valueDaysBefore2, valueYesterday, valueToday];
+
+    return graphData;
+}
