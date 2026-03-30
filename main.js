@@ -128,8 +128,8 @@ function printData(data)
         out +=
         '<td>' + changeSymbol + '</td>' +
         '<td>' + keyCurrrency + '</td>' +
-        '<td>' + ratesObj[keyCurrrency][0] + '</td>' +
         '<td>' + ratesObj[keyCurrrency][1] + '</td>' +
+        '<td>' + ratesObj[keyCurrrency][0] + '</td>' +
         '';
         out += "</tr>";
     }
