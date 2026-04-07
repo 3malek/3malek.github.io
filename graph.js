@@ -13,9 +13,9 @@ function chartValues(graphDataBtc, graphDataXau, graphDataXag, graphDataXpt, gra
     type: 'line',
     data: {
       labels: [
-        '4 days ago',
+        '9 days ago',
+        '6 days ago',
         '3 days ago',
-        '2 days ago',
         'Yesterday',
         'Today'
       ],
@@ -63,9 +63,9 @@ function chartValues(graphDataBtc, graphDataXau, graphDataXag, graphDataXpt, gra
     type: 'line',
     data: {
       labels: [
-        '4 days ago',
+        '9 days ago',
+        '6 days ago',
         '3 days ago',
-        '2 days ago',
         'Yesterday',
         'Today'
       ],
@@ -111,9 +111,9 @@ function chartValues(graphDataBtc, graphDataXau, graphDataXag, graphDataXpt, gra
     type: 'line',
     data: {
       labels: [
-        '4 days ago',
+        '9 days ago',
+        '6 days ago',
         '3 days ago',
-        '2 days ago',
         'Yesterday',
         'Today'
       ],
