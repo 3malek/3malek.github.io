@@ -197,14 +197,16 @@ function deriveChartValues(javascriptObject, currencyCode, rateOrValue)
 {
     const ratesTodayObj = javascriptObject.rates;
     const ratesYesterdayObj = javascriptObject.yesterday;
-    const ratesDaysBeforeObj2 = javascriptObject.daysBefore2;
+    /*const ratesDaysBeforeObj2 = javascriptObject.daysBefore2;
     const ratesDaysBeforeObj3 = javascriptObject.daysBefore3;
     const ratesDaysBeforeObj4 = javascriptObject.daysBefore4;
     const ratesDaysBeforeObj5 = javascriptObject.daysBefore5;
     const ratesDaysBeforeObj6 = javascriptObject.daysBefore6;
     const ratesDaysBeforeObj7 = javascriptObject.daysBefore7;
-    const ratesDaysBeforeObj8 = javascriptObject.daysBefore8;
+    const ratesDaysBeforeObj8 = javascriptObject.daysBefore8;*/
     const ratesDaysBeforeObj9 = javascriptObject.daysBefore9;
+    const ratesYearBefore1Obj = javascriptObject.yearBefore1;
+    const ratesYearsBefore5Obj = javascriptObject.yearsBefore5;
 
     const rateTodayArray = ratesTodayObj[currencyCode];
     const valueToday = rateTodayArray[rateOrValue];
@@ -212,7 +214,7 @@ function deriveChartValues(javascriptObject, currencyCode, rateOrValue)
     const rateYesterdayArray = ratesYesterdayObj[currencyCode];
     const valueYesterday = rateYesterdayArray[rateOrValue];
 
-    const rateDaysBefore2Array = ratesDaysBeforeObj2[currencyCode];
+    /*const rateDaysBefore2Array = ratesDaysBeforeObj2[currencyCode];
     const valueDaysBefore2 = rateDaysBefore2Array[rateOrValue];
 
     const rateDaysBefore3Array = ratesDaysBeforeObj3[currencyCode];
@@ -231,12 +233,18 @@ function deriveChartValues(javascriptObject, currencyCode, rateOrValue)
     const valueDaysBefore7= rateDaysBefore7Array[rateOrValue];
 
     const rateDaysBefore8Array = ratesDaysBeforeObj8[currencyCode];
-    const valueDaysBefore8 = rateDaysBefore8Array[rateOrValue];
+    const valueDaysBefore8 = rateDaysBefore8Array[rateOrValue];*/
 
     const rateDaysBefore9Array = ratesDaysBeforeObj9[currencyCode];
     const valueDaysBefore9 = rateDaysBefore9Array[rateOrValue];
 
-    const graphData = [valueDaysBefore9, valueDaysBefore6, valueDaysBefore3, valueYesterday, valueToday];
+    const rateYearBefore1Array = ratesYearBefore1Obj[currencyCode];
+    const valueYearBefore = rateYearBefore1Array[rateOrValue];
+
+    const rateYearsBefore5Array = ratesYearBefore1Obj[currencyCode];
+    const valueYearsBefore5 = rateYearsBefore5Array[rateOrValue];
+
+    const graphData = [valueYearsBefore5, valueYearBefore, valueDaysBefore9, valueYesterday, valueToday];
 
     return graphData;
 }
