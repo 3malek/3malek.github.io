@@ -9,8 +9,6 @@ var startInt = 0;
 var endInt = 0;
 var valueOfSelectElement = "GBP";
 
-var hopeThisWorks;
-
 // Get the query-string parameters
 $.urlParam = function(name)
 {
