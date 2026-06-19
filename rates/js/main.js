@@ -104,8 +104,8 @@ function printData(data)
 
     const ratesObj = jsonData.rates;
 
-    console.log( "ratesObj..." );
-    console.log( ratesObj );
+    //console.log( "ratesObj..." );
+    //console.log( ratesObj );
 
     var out = "";
     var counter = (urlParamPage-1) * urlParamLimit;
